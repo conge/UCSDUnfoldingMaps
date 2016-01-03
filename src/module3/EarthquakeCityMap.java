@@ -75,6 +75,7 @@ public class EarthquakeCityMap extends PApplet {
 	    
 	    // These print statements show you (1) all of the relevant properties 
 	    // in the features, and (2) how to get one property and use it
+	    /*
 	    if (earthquakes.size() > 0) {
 	    	PointFeature f = earthquakes.get(0);
 	    	System.out.println(f.getProperties());
@@ -82,12 +83,16 @@ public class EarthquakeCityMap extends PApplet {
 	    	float mag = Float.parseFloat(magObj.toString());
 	    	// PointFeatures also have a getLocation method
 	    }
+	    */
 	    
-	    // Here is an example of how to use Processing's color method to generate 
-	    // an int that represents the color yellow.  
-	    int yellow = color(255, 255, 0);
 	    
 	    //TODO: Add code here as appropriate
+	    for (int i = 0; i < earthquakes.size(); i++) {
+	    	PointFeature f = earthquakes.get(i);
+	    	markers.add(createMarker(f));
+	    }
+	    map.addMarkers(markers);
+	    
 	}
 		
 	// A suggested helper method that takes in an earthquake feature and 
@@ -95,13 +100,34 @@ public class EarthquakeCityMap extends PApplet {
 	// TODO: Implement this method and call it from setUp, if it helps
 	private SimplePointMarker createMarker(PointFeature feature)
 	{
-		// finish implementing and use this method, if it helps.
-		return new SimplePointMarker(feature.getLocation());
+		
+		// Here is an example of how to use Processing's color method to generate 
+	    // an int that represents the color yellow.  
+	    int yellow = color(255, 255, 0);
+		int blue = color(0,0,255);
+		int red = color(255,0,0);
+		SimplePointMarker marker = new SimplePointMarker(feature.getLocation());
+		Object magObj = feature.getProperty("magnitude");
+    	float mag = Float.parseFloat(magObj.toString());
+    	
+    	// Minor earthquakes (less than magnitude 4.0) will have blue markers and be small.
+    	// Light earthquakes (between 4.0-4.9) will have yellow markers and be medium.
+    	// Moderate and higher earthquakes (5.0 and over) will have red markers and be largest.
+    	
+    	if (mag < 4.0) {
+    		marker.setColor(blue);
+    	} else if (mag < 5.0) {
+    		marker.setColor(yellow);
+    	} else {
+    		marker.setColor(red);
+    	}
+		return marker;
 	}
 	
 	public void draw() {
 	    background(10);
 	    map.draw();
+	    
 	    addKey();
 	}
 
