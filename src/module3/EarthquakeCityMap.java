@@ -101,11 +101,11 @@ public class EarthquakeCityMap extends PApplet {
 	private SimplePointMarker createMarker(PointFeature feature)
 	{
 		
-		// Here is an example of how to use Processing's color method to generate 
-	    // an int that represents the color yellow.  
+		//   
 	    int yellow = color(255, 255, 0);
 		int blue = color(0,0,255);
 		int red = color(255,0,0);
+		
 		SimplePointMarker marker = new SimplePointMarker(feature.getLocation());
 		Object magObj = feature.getProperty("magnitude");
     	float mag = Float.parseFloat(magObj.toString());
@@ -136,9 +136,11 @@ public class EarthquakeCityMap extends PApplet {
 	// TODO: Implement this method to draw the key
 	private void addKey() 
 	{	
-		// Remember you can use Processing's graphics methods here
+		// rectangle
 		fill(255,255,255);
 		rect(50, 50, 140, 200);
+		
+		// texts
 		fill(0, 0, 0);
 		textSize(12);
 		text("Earthquake Key", 80, 90);
@@ -148,6 +150,7 @@ public class EarthquakeCityMap extends PApplet {
 		text("4.0+ magtitude", 85, 180);
 		text("below 4.0",      85, 210);
 		
+		// dots
 		fill(255,0,0);		//red
 		ellipse(70, 145, 15, 15);
 		
