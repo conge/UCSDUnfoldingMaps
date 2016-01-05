@@ -78,7 +78,7 @@ public class EarthquakeCityMap extends PApplet {
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
 		//earthquakesURL = "test1.atom";
-		earthquakesURL = "test2.atom";
+		//earthquakesURL = "test2.atom";
 		
 		// WHEN TAKING THIS QUIZ: Uncomment the next line
 		//earthquakesURL = "quiz1.atom";
@@ -134,6 +134,7 @@ public class EarthquakeCityMap extends PApplet {
 	// TODO: Update this method as appropriate
 	private void addKey() {	
 		// Remember you can use Processing's graphics methods here
+		/*
 		fill(255, 250, 240);
 		rect(25, 50, 150, 250);
 		
@@ -153,10 +154,67 @@ public class EarthquakeCityMap extends PApplet {
 		text("5.0+ Magnitude", 75, 125);
 		text("4.0+ Magnitude", 75, 175);
 		text("Below 4.0", 75, 225);
+		*/
+		
+		fill(255, 250, 240);
+		rect(25, 50, 150, 250);
+		
+		ellipse(50, 125, 10, 10);
+		rect(50 -5, 145-5, 10, 10);
+		ellipse(50, 260, 10, 10);
+		
+		fill(0);
+		textAlign(LEFT, CENTER);
+		textSize(12);
+		text("Earthquake Key", 50, 75);
+		
+		fill(color(	0, 255, 255));		
+		drawTriangle(50,105);
+		
+		int yellow	= color(255,255,0);
+		int blue	= color(0,0,255);
+		int red		= color(255,0,0);
+		
+		fill(yellow);
+		ellipse(50, 200, 10, 10);
+		
+		fill(blue);
+		ellipse(50, 220, 10, 10);
+		
+		fill(red);
+		ellipse(50, 240, 10, 10);
+		
+		fill(0);
+		
+		line(40,250,60,270);
+		line(40,270,60,250);
+		
+		
+		fill(0, 0, 0);
+		text("City Marker", 75, 105);
+		text("Land Quake", 75, 125);
+		text("Ocean Quake", 75, 145);
+		text("Size ~ Magnitude", 50, 165);
+		text("Shallow", 75, 200);
+		text("Intermediate", 75, 220);
+		text("Deep", 75, 240);
+		text("Past Day", 75, 260);
+		
+		
+		
+		
 	}
 
 	
 	
+	private void drawTriangle(int x, int y) {
+		// TODO Auto-generated method stub
+		triangle(x, y-5, 
+				 x-2, y+3, 
+				 x+2, y+3);
+	}
+
+
 	// Checks whether this quake occurred on land.  If it did, it sets the 
 	// "country" property of its PointFeature to the country where it occurred
 	// and returns true.  Notice that the helper method isInCountry will
