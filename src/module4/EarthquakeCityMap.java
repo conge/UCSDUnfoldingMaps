@@ -1,5 +1,6 @@
 package module4;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +78,7 @@ public class EarthquakeCityMap extends PApplet {
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
 		//earthquakesURL = "test1.atom";
-		//earthquakesURL = "test2.atom";
+		earthquakesURL = "test2.atom";
 		
 		// WHEN TAKING THIS QUIZ: Uncomment the next line
 		//earthquakesURL = "quiz1.atom";
@@ -165,6 +166,13 @@ public class EarthquakeCityMap extends PApplet {
 		// IMPLEMENT THIS: loop over all countries to check if location is in any of them
 		
 		// TODO: Implement this method using the helper method isInCountry
+		for (Marker country:this.countryMarkers) {
+			if (isInCountry( earthquake, country)) {
+				return true;
+			}
+			
+			
+		}
 		
 		// not inside any country
 		return false;
@@ -179,6 +187,42 @@ public class EarthquakeCityMap extends PApplet {
 	private void printQuakes() 
 	{
 		// TODO: Implement this method
+		int countryQuakeCount;
+		int landQuakeCount;
+		
+		landQuakeCount = 0;
+		
+		String countryNanme;
+		String quakeLoc;
+		
+		for ( Marker countryMarker:this.countryMarkers)
+		{
+			countryQuakeCount	= 0;
+			countryNanme = (String) countryMarker.getProperty("name");
+			
+			for (Marker quakeMarker:this.quakeMarkers) 
+			{
+				if (quakeMarker.getClass()==LandQuakeMarker.class)
+				{
+					quakeLoc = ((LandQuakeMarker) quakeMarker).getCountry();
+					if (quakeLoc.equals(countryNanme)) 
+					{
+						countryQuakeCount++;
+					}
+				} 
+				
+				
+			}
+			if (countryQuakeCount > 0) 
+			{
+				System.out.println(countryNanme + ": " + countryQuakeCount);	
+				landQuakeCount = landQuakeCount + countryQuakeCount;
+			}
+		}
+		
+		System.out.println( "OCEAN QUAKES: " + (this.quakeMarkers.size()-landQuakeCount));				
+		
+
 	}
 	
 	
