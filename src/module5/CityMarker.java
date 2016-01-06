@@ -31,7 +31,8 @@ public class CityMarker extends CommonMarker {
 		// and "population" (population, in millions)
 	}
 
-	
+	// Note: drawMarker() method was named draw(). I renamed it and use it to implement the
+	// abstract method in CommenMarker.java
 	/**
 	 * Implementation of method to draw marker on the map.
 	 */
