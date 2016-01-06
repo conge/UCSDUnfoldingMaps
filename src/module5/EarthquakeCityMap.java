@@ -169,9 +169,60 @@ public class EarthquakeCityMap extends PApplet {
 		// TODO: Implement this method
 		// Hint: You probably want a helper method or two to keep this code
 		// from getting too long/disorganized
+		
+		// clear the last selection
+		if (lastClicked != null) 
+		{
+			
+			lastClicked.setClicked(false);
+			lastClicked = null;
+			
+		}
+		selectMarkerIfClicked(quakeMarkers);
+		selectMarkerIfClicked(cityMarkers);
+		
+		
+		if (lastClicked == null) 
+		{
+			unhideMarkers();
+		} else if (lastClicked.getClass()==OceanQuakeMarker.class || 
+				   lastClicked.getClass()==LandQuakeMarker.class)
+		{
+			double threatRadius = ((EarthquakeMarker) lastClicked).threatCircle();
+			for (Marker marker: cityMarkers) 
+			{
+				if (marker.getDistanceTo(lastClicked.getLocation()) <= threatRadius) 
+				{
+					marker.setHidden(false);
+				} else { 
+					marker.setHidden(true);				
+				}
+			}
+		} else if (lastClicked.getClass()==CityMarker.class) 
+		{
+			System.out.println("ln204: "+lastClicked.getClass());
+		} else {
+			System.out.println("ln206: "+lastClicked.getClass());
+		}
 	}
 	
 	
+	private void selectMarkerIfClicked(List<Marker> markers) {
+		// TODO Auto-generated method stub
+		for (Marker marker : markers) {
+			 if (marker.isInside( this.map, mouseX, mouseY ) && lastClicked == null) 
+			 {
+				lastClicked = (CommonMarker) marker;
+				lastClicked.setClicked(true);
+				
+				break;
+			 }
+			 
+		}
+		
+	}
+
+
 	// loop over and unhide all markers
 	private void unhideMarkers() {
 		for(Marker marker : quakeMarkers) {
