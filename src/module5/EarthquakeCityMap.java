@@ -170,16 +170,20 @@ public class EarthquakeCityMap extends PApplet {
 		// Hint: You probably want a helper method or two to keep this code
 		// from getting too long/disorganized
 		
-		// clear the last selection
+		// clear the last clicked
 		if (lastClicked != null) 
 		{
-			
+			unhideMarkers();
 			lastClicked.setClicked(false);
 			lastClicked = null;
 			
+		} else 
+		{
+			selectMarkerIfClicked(quakeMarkers);
+			selectMarkerIfClicked(cityMarkers);
+			
 		}
-		selectMarkerIfClicked(quakeMarkers);
-		selectMarkerIfClicked(cityMarkers);
+		
 		
 		
 		
