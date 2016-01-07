@@ -182,12 +182,15 @@ public class EarthquakeCityMap extends PApplet {
 		selectMarkerIfClicked(cityMarkers);
 		
 		
+		
 		if (lastClicked == null) 
 		{
 			unhideMarkers();
 		} else if (lastClicked.getClass()==OceanQuakeMarker.class || 
 				   lastClicked.getClass()==LandQuakeMarker.class)
 		{
+			hideAllMarkers();
+			lastClicked.setHidden(false);
 			double threatRadius = ((EarthquakeMarker) lastClicked).threatCircle();
 			for (Marker marker: cityMarkers) 
 			{
@@ -200,7 +203,21 @@ public class EarthquakeCityMap extends PApplet {
 			}
 		} else if (lastClicked.getClass()==CityMarker.class) 
 		{
-			System.out.println("ln204: "+lastClicked.getClass());
+			hideAllMarkers();
+			lastClicked.setHidden(false);
+			
+			for (Marker marker: quakeMarkers) 
+			{
+				double threatRadius = ((EarthquakeMarker) marker).threatCircle();
+				if (marker.getDistanceTo(lastClicked.getLocation()) <= threatRadius) 
+				{
+					marker.setHidden(false);
+				} else { 
+					marker.setHidden(true);				
+				}
+			}
+			
+			
 		} else {
 			System.out.println("ln206: "+lastClicked.getClass());
 		}
@@ -233,6 +250,18 @@ public class EarthquakeCityMap extends PApplet {
 			marker.setHidden(false);
 		}
 	}
+
+	// loop over and hide all markers
+	private void hideAllMarkers() {
+		for(Marker marker : quakeMarkers) {
+			marker.setHidden(true);
+		}
+			
+		for(Marker marker : cityMarkers) {
+			marker.setHidden(true);
+		}
+	}
+	
 	
 	// helper method to draw key in GUI
 	private void addKey() {	
