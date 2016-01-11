@@ -276,6 +276,40 @@ public class ParseFeed {
 
 		return lifeExpMap;
 	}
+
+
+	public static HashMap<String, Float> loadgunDataFromCSV(
+			PApplet p, String fileName) {
+		HashMap<String, Float> casualties = null;
+		String[] rows = p.loadStrings(fileName);
+		// TODO Auto-generated method stub
+		
+		for (String row : rows) {
+			// split row by commas not in quotations
+			String[] columns = row.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+			System.out.println(row);
+			// check if there is any life expectancy data from any year, get most recent
+			/*
+			 * EXTENSION: Add code to also get the year the data is from.
+			 * You may want to use a list of Floats as the  values for the HashMap
+			 * and store the year as the second value. (There are many other ways to do this)
+			 */
+			//
+			for(int i = columns.length - 1; i > 3; i--) {
+				
+				// check if value exists for year
+				if(!columns[i].equals("..")) {
+					
+					casualties.put(columns[1], Float.parseFloat(columns[i]));
+					
+					// break once most recent data is found
+					break;
+				}
+			}
+			
+		}
+		return casualties;
+	}
 	
 	
 
