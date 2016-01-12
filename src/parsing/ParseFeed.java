@@ -251,6 +251,7 @@ public class ParseFeed {
 		
 		// Reads country name and population density value from CSV row
 		for (String row : rows) {
+			
 			// split row by commas not in quotations
 			String[] columns = row.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 			
@@ -280,14 +281,15 @@ public class ParseFeed {
 
 	public static HashMap<String, Float> loadgunDataFromCSV(
 			PApplet p, String fileName) {
-		HashMap<String, Float> casualties = null;
+		HashMap<String, Float> casualties = new HashMap<String, Float>() ;
 		String[] rows = p.loadStrings(fileName);
 		// TODO Auto-generated method stub
 		
-		for (String row : rows) {
+		for (int r = 1; r < rows.length; r++) {
+			System.out.println("JParseFeed ln 289: " + rows[r]);
 			// split row by commas not in quotations
-			String[] columns = row.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
-			System.out.println(row);
+			String[] columns = rows[r].split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+			// System.out.println(row);
 			// check if there is any life expectancy data from any year, get most recent
 			/*
 			 * EXTENSION: Add code to also get the year the data is from.
@@ -295,7 +297,7 @@ public class ParseFeed {
 			 * and store the year as the second value. (There are many other ways to do this)
 			 */
 			//
-			for(int i = columns.length - 1; i > 3; i--) {
+			for(int i = columns.length - 2; i > 3; i--) {
 				
 				// check if value exists for year
 				if(!columns[i].equals("..")) {
