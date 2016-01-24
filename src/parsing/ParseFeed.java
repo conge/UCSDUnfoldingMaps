@@ -279,7 +279,7 @@ public class ParseFeed {
 	}
 
 
-	public static HashMap<String, Float> loadgunDataFromCSV(
+	public static List<PointFeature> loadgunDataFromCSV(
 			PApplet p, String fileName) {
 		HashMap<String, Float> casualties = new HashMap<String, Float>() ;
 		String[] rows = p.loadStrings(fileName);

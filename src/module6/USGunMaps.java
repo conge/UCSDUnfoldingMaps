@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import module5.CityMarker;
+
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
@@ -23,6 +25,7 @@ import de.fhpotsdam.unfolding.UnfoldingMap;
 import de.fhpotsdam.unfolding.data.Feature;
 import de.fhpotsdam.unfolding.data.GeoJSONReader;
 import de.fhpotsdam.unfolding.data.PointFeature;
+import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.providers.Google;
 import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
@@ -64,14 +67,13 @@ public class USGunMaps extends PApplet {
 	
 	// Markers for each incident
 	private List<Marker> gunMarkers;
-	
-	
-	
+
 	HashMap<String, Float> gunViolences;
 
 	public void setup() {		
 		// (1) Initializing canvas and map tiles
 		size(900, 700, OPENGL);
+		int zoomLevel = 4;
 		if (offline) {
 		    map = new UnfoldingMap(this, 200, 50, 650, 600, new MBTilesMapProvider(mbTilesString));
 		    gunDataURL = "";
@@ -103,14 +105,14 @@ public class USGunMaps extends PApplet {
 		
 		//     STEP 3: read in earthquake RSS feed
 		
-		gunViolences =  ParseFeed.loadgunDataFromCSV(this,gunDataURL);
-		
+		List<PointFeature> gunViolences =  ParseFeed.loadgunDataFromCSV(this,gunDataURL);
+		gunMarkers = new ArrayList<Marker>();
+		for(Feature gun : gunViolences) {
+		  gunMarkers.add(new GunMarker(gun));
+		}
 	   
-		
-		
-		map.addMarkers(statesMarkers);
-		System.out.println(statesMarkers.get(0).getId());
-	    
+		// Load country polygons and adds them as markers
+		map.zoomAndPanTo(zoomLevel, new Location(39.50f, -98.35f));
 	    
 	}  // End setup
 	
@@ -122,5 +124,5 @@ public class USGunMaps extends PApplet {
 		
 	}
 	
-
+	
 }
