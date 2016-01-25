@@ -50,5 +50,7 @@
 	<classpathentry kind="lib" path="lib/xalan-2.7.2.jar"/>
 	<classpathentry kind="lib" path="lib/xercesImpl-2.11.0.jar"/>
 	<classpathentry kind="lib" path="lib/xml-apis-1.4.01.jar"/>
+	<classpathentry kind="lib" path="/Users/Yang/Downloads/geonames-1.1.13.jar"/>
+	<classpathentry kind="lib" path="/Users/Yang/Downloads/jdom-1.0.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

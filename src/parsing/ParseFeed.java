@@ -12,6 +12,8 @@ import de.fhpotsdam.unfolding.geo.Location;
 import processing.core.PApplet;
 import processing.data.XML;
 
+import org.geonames.*;
+
 public class ParseFeed {
 
 
@@ -281,36 +283,82 @@ public class ParseFeed {
 
 	public static List<PointFeature> loadgunDataFromCSV(
 			PApplet p, String fileName) {
-		HashMap<String, Float> casualties = new HashMap<String, Float>() ;
+		List<PointFeature> features = new ArrayList<PointFeature>();
+
 		String[] rows = p.loadStrings(fileName);
-		// TODO Auto-generated method stub
-		
-		for (int r = 1; r < rows.length; r++) {
-			System.out.println("JParseFeed ln 289: " + rows[r]);
-			// split row by commas not in quotations
-			String[] columns = rows[r].split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
-			// System.out.println(row);
-			// check if there is any life expectancy data from any year, get most recent
-			/*
-			 * EXTENSION: Add code to also get the year the data is from.
-			 * You may want to use a list of Floats as the  values for the HashMap
-			 * and store the year as the second value. (There are many other ways to do this)
-			 */
-			//
-			for(int i = columns.length - 2; i > 3; i--) {
+		int id = 0;
+		for (String row : rows) {
+			 float lat =0;
+			 float lon =0;
+			if (id == 0) {
+				id++;
 				
-				// check if value exists for year
-				if(!columns[i].equals("..")) {
-					
-					casualties.put(columns[1], Float.parseFloat(columns[i]));
-					
-					// break once most recent data is found
-					break;
+			}else {
+				id++;
+				// hot-fix for altitude when lat lon out of place
+				
+				// split row by commas not in quotations
+				String[] columns = row.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+				
+				String searchPhrase = columns[2].split("\\(")[0] + ", " + columns[1];
+				WebService.setUserName("conge"); // add your username here
+				ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
+				searchCriteria.setQ(searchPhrase);
+				searchCriteria.setMaxRows(1);
+				// System.out.println("ln 308: "+searchPhrase);
+				
+				ToponymSearchResult searchResult = null;
+				try {
+					searchResult = WebService.search(searchCriteria);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
+				if (searchResult != null) { 
+					List<Toponym> toponyms = searchResult.getToponyms();
+					Toponym toponym = toponyms.get(0);
+				    
+					// System.out.println("ln 319: "+toponym.getName()+" "+ toponym.getCountryName());
+				    
+					lat = (float) toponym.getLatitude();
+				    lon = (float) toponym.getLongitude();
+				}
+				
+		
+				// get location and create feature
+				//System.out.println(columns[6]);
+				
+				Location loc = new Location(lat, lon);
+				PointFeature point = new PointFeature(loc);
+			
+			
+				// set ID to OpenFlights unique identifier
+				point.setId(Integer.toString(id));
+			
+			// get other fields from csv
+				point.addProperty("date", columns[0]);
+				point.putProperty("state", columns[1]);
+				point.putProperty("city", columns[2]);
+
+				point.putProperty("address", columns[3]);
+				int numKilled	= Integer.parseInt(columns[4]);
+				int numInjured	= Integer.parseInt(columns[5]);
+				
+				point.putProperty("numKilled", numKilled);
+				point.putProperty("numInjured", numInjured);
+				String titleStr = "On " + columns[0]+"," + 
+						numKilled + " killed, " + 
+						numInjured + " injured.";
+				point.putProperty("title", titleStr);
+				
+				features.add(point);
 			}
 			
+			
 		}
-		return casualties;
+
+		return features;
+		
 	}
 	
 	

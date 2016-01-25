@@ -1,25 +1,8 @@
 package module6;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import module5.CityMarker;
-
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
-import com.gargoylesoftware.htmlunit.WaitingRefreshHandler;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
 import de.fhpotsdam.unfolding.data.Feature;
@@ -58,7 +41,8 @@ public class USGunMaps extends PApplet {
 	
 		
 	// The files containing city names and info and country names and info
-	private String cityFile = "city-data.json";
+	// statesFiles was downloaded from http://eric.clst.org/Stuff/USGeoJSON
+	
 	private String statesFile = "gz_2010_us_040_00_500k.json";
 	List<Marker> statesMarkers;
 	
@@ -69,6 +53,10 @@ public class USGunMaps extends PApplet {
 	private List<Marker> gunMarkers;
 
 	HashMap<String, Float> gunViolences;
+	
+	private int numKilled = 0;
+	private int numInjured = 0;
+	private int numIncidents;
 
 	public void setup() {		
 		// (1) Initializing canvas and map tiles
@@ -107,12 +95,18 @@ public class USGunMaps extends PApplet {
 		
 		List<PointFeature> gunViolences =  ParseFeed.loadgunDataFromCSV(this,gunDataURL);
 		gunMarkers = new ArrayList<Marker>();
+		
 		for(Feature gun : gunViolences) {
-		  gunMarkers.add(new GunMarker(gun));
+			this.numKilled= this.numKilled + (int) gun.getProperty("numKilled");
+			this.numInjured= this.numInjured + (int) gun.getProperty("numInjured");
+			gunMarkers.add(new GunMarker(gun));
+		  
 		}
+	   this.numIncidents = gunMarkers.size();
 	   
 		// Load country polygons and adds them as markers
 		map.zoomAndPanTo(zoomLevel, new Location(39.50f, -98.35f));
+		map.addMarkers(gunMarkers);
 	    
 	}  // End setup
 	
@@ -120,9 +114,45 @@ public class USGunMaps extends PApplet {
 	public void draw() {
 		background(0);
 		map.draw();
-		//addKey();
+		addKey();
 		
 	}
 	
+	// helper method to draw key in GUI
+		private void addKey() {	
+			// Remember you can use Processing's graphics methods here
+			fill(255, 250, 240);
+			
+			int xbase = 25;
+			int ybase = 50;
+			
+			rect(xbase, ybase, 150, 250);
+			
+			fill(0);
+			textAlign(LEFT, CENTER);
+			textSize(12);
+			text("U.S. Gun Vialences ", xbase+25, ybase+25);
+			text("in the past 3 days", xbase+35, ybase+40);
+			
+			
+			fill(color(255, 255, 0));
+			ellipse(xbase+35, ybase+80, 12, 12);
+			fill(color(0, 0, 255));
+			ellipse(xbase+35, ybase+60, 12, 12);
+			fill(color(255, 0, 0));
+			ellipse(xbase+35, ybase+100, 12, 12);
+			
+			textAlign(LEFT, CENTER);
+			fill(0, 0, 0);
+			text("Everyone safe", xbase+50, ybase+60);
+			text("People killed", xbase+50, ybase+80);
+			text("People injured", xbase+50, ybase+100);
+
+			
+			text(this.numInjured + " people were injured;",xbase+50, ybase+140);
+			text(this.numKilled + " people were killed,",xbase+50, ybase+160);
+			text("in " + this.numIncidents + " gun-related incidents",xbase+50, ybase+180);
+			text("during the past 3 days ",xbase+50, ybase+200);
+		}
 	
 }
